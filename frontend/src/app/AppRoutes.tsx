@@ -64,6 +64,8 @@ const AcceleratorProfileRoutes = React.lazy(
 
 const ModelRegistryRoutes = React.lazy(() => import('../pages/modelRegistry/ModelRegistryRoutes'));
 
+const WorkflowRoutes = React.lazy(() => import('../pages/workflows/WorkflowRoutes'));
+
 const AppRoutes: React.FC = () => {
   const { isAdmin, isAllowed } = useUser();
   const isJupyterEnabled = useCheckJupyterEnabled();
@@ -106,6 +108,8 @@ const AppRoutes: React.FC = () => {
         <Route path="/modelServing/*" element={<ModelServingRoutes />} />
 
         <Route path="/modelRegistry/*" element={<ModelRegistryRoutes />} />
+
+        <Route path="/workflows/*" element={<WorkflowRoutes />} />
 
         <Route path={globPipelinesAll} element={<GlobalPipelinesRoutes />} />
         <Route path={globPipelineRunsAll} element={<GlobalPipelineRunsRoutes />} />

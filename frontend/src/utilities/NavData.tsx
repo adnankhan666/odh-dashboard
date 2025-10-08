@@ -193,6 +193,7 @@ export const useBuildNavData = (): NavDataItem[] => [
   ...useDistributedWorkloadsNav(),
   ...useModelServingNav(),
   ...useModelRegistrySectionNav(),
+  ...useWorkflowNav(),
   ...useResourcesNav(),
   ...useSettingsNav(),
 ];
