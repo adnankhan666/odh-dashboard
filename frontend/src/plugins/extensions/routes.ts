@@ -480,6 +480,20 @@ const extensions: RouteExtension[] = [
       }),
     },
   },
+  {
+    type: 'app.route',
+    properties: {
+      path: '/canvas/*',
+      component: () => import('#~/pages/canvas/Canvas'),
+    },
+  },
+  {
+    type: 'app.route',
+    properties: {
+      path: '/telemetry',
+      component: () => import('#~/pages/telemetry/Telemetry'),
+    },
+  },
 ];
 
 export default extensions;

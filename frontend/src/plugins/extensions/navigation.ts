@@ -168,6 +168,16 @@ const extensions: NavExtension[] = [
       path: '/develop-train/experiments/*',
     },
   },
+  {
+    type: 'app.navigation/href',
+    properties: {
+      id: 'canvas',
+      title: 'Workflow Canvas',
+      href: '/canvas',
+      section: 'develop-and-train',
+      path: '/canvas/*',
+    },
+  },
 
   {
     type: 'app.navigation/section',
@@ -188,6 +198,15 @@ const extensions: NavExtension[] = [
       title: 'Workload metrics',
       href: '/observe-monitor/workload-metrics',
       path: '/observe-monitor/workload-metrics/*',
+      section: 'observe-and-monitor',
+    },
+  },
+  {
+    type: 'app.navigation/href',
+    properties: {
+      id: 'telemetry',
+      title: 'Telemetry',
+      href: '/telemetry',
       section: 'observe-and-monitor',
     },
   },
