@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JIRA Hygiene Report - November 20, 2025</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; background: #f5f7fa; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3); }
+        .header h1 { font-size: 32px; margin-bottom: 10px; }
+        .header-info { display: flex; gap: 30px; margin-top: 15px; flex-wrap: wrap; }
+        .header-info span { opacity: 0.95; }
+        .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        @media (max-width: 1000px) { .summary-cards { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .summary-cards { grid-template-columns: 1fr; } }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.2s; border-left: 4px solid; min-height: 140px; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.12); }
+        .card.clickable { cursor: pointer; }
+        .card h3 { font-size: 11px; color: #333; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .card .number { font-size: 36px; font-weight: bold; line-height: 1; margin-bottom: 8px; }
+        .card .label { font-size: 13px; margin-top: 4px; font-weight: 500; }
+        .card .sublabel { font-size: 11px; color: #999; margin-top: 4px; }
+        .card-blue { border-left-color: #3b82f6; } .card-blue .number { color: #3b82f6; } .card-blue .label { color: #1e40af; }
+        .card-orange { border-left-color: #f59e0b; } .card-orange .number { color: #f59e0b; } .card-orange .label { color: #d97706; }
+        .card-red { border-left-color: #ef4444; } .card-red .number { color: #ef4444; } .card-red .label { color: #dc2626; }
+        .card-purple { border-left-color: #8b5cf6; } .card-purple .number { color: #8b5cf6; } .card-purple .label { color: #7c3aed; }
+        .section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .section h2 { color: #333; margin-bottom: 20px; font-size: 24px; border-bottom: 2px solid #667eea; padding-bottom: 10px; }
+        .executive-summary { background: #f8f9ff; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; }
+        .executive-summary p { margin: 10px 0; }
+        .action-items-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .action-item { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; display: flex; align-items: center; min-height: 70px; transition: transform 0.2s; }
+        .action-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .action-item-number { padding: 20px 25px; font-weight: 700; color: white; font-size: 16px; width: 320px; min-width: 320px; max-width: 320px; display: flex; align-items: center; }
+        .action-item-content { padding: 15px 20px; flex: 1; display: flex; align-items: center; justify-content: space-between; }
+        .action-item-text { flex: 1; }
+        .action-item-text p { margin: 0; font-size: 14px; color: #333; }
+        .action-item-text .impact { font-weight: 600; color: #333; }
+        .action-item-text .fix { color: #666; margin-left: 10px; }
+        .action-item-text .time { color: #999; font-size: 12px; margin-left: 10px; }
+        .action-item-link { margin-left: 20px; }
+        .action-item-link a { color: #667eea; text-decoration: none; font-weight: 600; padding: 8px 16px; background: #f8f9ff; border-radius: 6px; border: 1px solid #e0e7ff; white-space: nowrap; font-size: 13px; }
+        .action-item-link a:hover { background: #e0e7ff; }
+        .action-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .action-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .action-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .action-gradient-4 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .action-gradient-5 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .best-practices { background: #f0fdf4; padding: 20px; border-radius: 8px; border-left: 4px solid #10b981; margin: 15px 0; }
+        .best-practices h4 { color: #10b981; margin-bottom: 10px; }
+        .best-practices ul { margin-left: 20px; margin-top: 10px; }
+        .best-practices li { margin: 8px 0; color: #333; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 JIRA Hygiene Report</h1>
+            <div class="header-info">
+                <span><strong>Generated:</strong> November 20, 2025</span>
+                <span><strong>Next Report:</strong> November 27, 2025</span>
+                <span><strong>Components:</strong> AI Core Dashboard, Notebooks Server, Notebooks Extensions</span>
+                <span><strong>Projects:</strong> RHAISTRAT, RHOAISTRAT, RHOAIENG</span>
+            </div>
+        </div>
+
+        <div class="summary-cards">
+            <div class="card card-blue clickable" onclick="window.open('https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20(resolution%20%3D%20Unresolved%20OR%20(status%20IN%20(Done%2C%20Closed)%20AND%20updated%20%3E%3D%20-30d))%20ORDER%20BY%20updated%20DESC', '_blank')">
+                <h3>Total Issues</h3>
+                <div class="number">654</div>
+                <div class="label">8 Scrum Teams</div>
+                <div class="sublabel">🔗 Click to view</div>
+            </div>
+            <div class="card card-orange">
+                <h3>Hygiene Score</h3>
+                <div class="number">66%</div>
+                <div class="label">Grade: D</div>
+                <div class="sublabel">33% violation rate</div>
+            </div>
+            <div class="card card-red">
+                <h3>Violations</h3>
+                <div class="number">220</div>
+                <div class="label">33% Need Attention</div>
+                <div class="sublabel">61 PR + 106 priority + 43 fix + 7 desc + 3 assignee</div>
+            </div>
+            <div class="card card-purple">
+                <h3>Cleanup Time</h3>
+                <div class="number">3h</div>
+                <div class="label">Bulk Operations</div>
+                <div class="sublabel">Most are bulk edits</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Executive Summary</h2>
+            <div class="executive-summary">
+                <p>Analysis of <strong>654 issues</strong> (unresolved + recently completed) across <strong>8 scrum team labels</strong>.</p>
+                
+                <p><strong>Key Findings:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>61</strong> active work missing Git PR links 🚨</li>
+                    <li><strong>106</strong> missing or undefined Priority</li>
+                    <li><strong>43</strong> in-progress missing Fix Version (NEW RULE)</li>
+                    <li><strong>7</strong> empty descriptions</li>
+                    <li><strong>3</strong> active work without assignee</li>
+                </ul>
+
+                <p style="margin-top: 15px;"><strong>Overall Health:</strong> 66% (Grade D). <span class="highlight">Primary concerns: Git PR links (61) and priorities (106)</span>.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Team Grades</h2>
+            <p style="margin-bottom: 15px; padding: 10px; background: #f8f9ff; border-radius: 6px; font-size: 14px;">
+                <strong>Note:</strong> Team grades based on <strong>654 total issues</strong> across 8 monitored scrum team labels (fresh data from November 20, 2025).
+            </p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Team</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Score</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Grade</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Status</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Total Issues</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600;">Violations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-zaffre-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-zaffre-scrum</a></td>
+                        <td style="padding: 15px;">98%</td>
+                        <td style="padding: 15px; color: #10b981; font-weight: bold; font-size: 18px;">A</td>
+                        <td style="padding: 15px; color: #10b981; font-weight: 600;">🌟 Excellent</td>
+                        <td style="padding: 15px;">21</td>
+                        <td style="padding: 15px;">3</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-tangerine-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-tangerine-scrum</a></td>
+                        <td style="padding: 15px;">90%</td>
+                        <td style="padding: 15px; color: #10b981; font-weight: bold; font-size: 18px;">A</td>
+                        <td style="padding: 15px; color: #10b981; font-weight: 600;">🌟 Excellent</td>
+                        <td style="padding: 15px;">19</td>
+                        <td style="padding: 15px;">8</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-razzmatazz-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-razzmatazz-scrum</a></td>
+                        <td style="padding: 15px;">88%</td>
+                        <td style="padding: 15px; color: #3b82f6; font-weight: bold; font-size: 18px;">B</td>
+                        <td style="padding: 15px; color: #3b82f6; font-weight: 600;">✅ Good</td>
+                        <td style="padding: 15px;">34</td>
+                        <td style="padding: 15px;">9</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-monarch-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-monarch-scrum</a></td>
+                        <td style="padding: 15px;">79%</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: bold; font-size: 18px;">C</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: 600;">⚡ Fair</td>
+                        <td style="padding: 15px;">73</td>
+                        <td style="padding: 15px;">23</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22ide_scrum%3Ateal%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">ide_scrum:teal</a></td>
+                        <td style="padding: 15px;">77%</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: bold; font-size: 18px;">C</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: 600;">⚡ Fair</td>
+                        <td style="padding: 15px;">14</td>
+                        <td style="padding: 15px;">1</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-crimson-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-crimson-scrum</a></td>
+                        <td style="padding: 15px;">75%</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: bold; font-size: 18px;">C</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: 600;">⚠️ Needs Attention</td>
+                        <td style="padding: 15px;">100</td>
+                        <td style="padding: 15px;">51</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22dashboard-green-scrum%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">dashboard-green-scrum</a></td>
+                        <td style="padding: 15px;">74%</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: bold; font-size: 18px;">C</td>
+                        <td style="padding: 15px; color: #f59e0b; font-weight: 600;">⚠️ Needs Attention</td>
+                        <td style="padding: 15px;">60</td>
+                        <td style="padding: 15px;">27</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 15px;"><a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20%3D%20%22ide_scrum%3Aindigo%22%20ORDER%20BY%20updated%20DESC" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 500;">ide_scrum:indigo</a></td>
+                        <td style="padding: 15px;">35%</td>
+                        <td style="padding: 15px; color: #ef4444; font-weight: bold; font-size: 18px;">F</td>
+                        <td style="padding: 15px; color: #ef4444; font-weight: 600;">🚨 Critical</td>
+                        <td style="padding: 15px;">10</td>
+                        <td style="padding: 15px;">9</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 14px;">
+                <strong>Grade Legend:</strong> 
+                <span style="margin-left: 15px;"><span style="color: #10b981; font-weight: bold; font-size: 18px;">A</span> = 90-100% (Excellent)</span>
+                <span style="margin-left: 15px;"><span style="color: #3b82f6; font-weight: bold; font-size: 18px;">B</span> = 80-89% (Good)</span>
+                <span style="margin-left: 15px;"><span style="color: #f59e0b; font-weight: bold; font-size: 18px;">C</span> = 70-79% (Fair)</span>
+                <span style="margin-left: 15px;"><span style="color: #f59e0b; font-weight: bold; font-size: 18px;">D</span> = 60-69% (Poor)</span>
+                <span style="margin-left: 15px;"><span style="color: #ef4444; font-weight: bold; font-size: 18px;">F</span> = Below 60% (Critical)</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Top Action Items</h2>
+            <div class="action-items-list">
+                <div class="action-item">
+                    <div class="action-item-number action-gradient-1">
+                        1. Git PR Missing (61) 🚨
+                    </div>
+                    <div class="action-item-content">
+                        <div class="action-item-text">
+                            <p><span class="impact">Impact:</span> Cannot track code changes. <span class="fix">Fix:</span> Add Git PR links.<span class="time">~1 hour</span></p>
+                        </div>
+                        <div class="action-item-link">
+                            <a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20status%20IN%20(%22In%20Progress%22%2C%20%22Code%20Review%22%2C%20%22Review%22%2C%20%22In%20Review%22)%20AND%20%22Git%20Pull%20Request%22%20is%20EMPTY%20AND%20issuetype%20!%3D%20Epic%20ORDER%20BY%20updated%20ASC" target="_blank">🔗 View 61 Issues</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-item-number action-gradient-2">
+                        2. Missing Priority (106) ⚠️
+                    </div>
+                    <div class="action-item-content">
+                        <div class="action-item-text">
+                            <p><span class="impact">Impact:</span> Cannot prioritize work. <span class="fix">Fix:</span> Bulk set priorities.<span class="time">~1 hour</span></p>
+                        </div>
+                        <div class="action-item-link">
+                            <a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20(priority%20is%20EMPTY%20OR%20priority%20%3D%20Undefined)%20AND%20resolution%20%3D%20Unresolved%20AND%20issuetype%20!%3D%20Epic%20ORDER%20BY%20created%20DESC" target="_blank">🔗 View 106 Issues</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-item-number action-gradient-3">
+                        3. Fix Version Missing (43) 🚨
+                    </div>
+                    <div class="action-item-content">
+                        <div class="action-item-text">
+                            <p><span class="impact">Impact:</span> No target release. <span class="fix">Fix:</span> Assign fix versions.<span class="time">~30 min</span></p>
+                        </div>
+                        <div class="action-item-link">
+                            <a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20status%20IN%20(%22In%20Progress%22%2C%20%22Review%22%2C%20%22Testing%22)%20AND%20fixVersion%20is%20EMPTY%20AND%20issuetype%20!%3D%20Epic%20AND%20%22Epic%20Link%22%20is%20EMPTY%20ORDER%20BY%20updated%20DESC" target="_blank">🔗 View 43 Issues</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-item-number action-gradient-4">
+                        4. Empty Descriptions (7) 📝
+                    </div>
+                    <div class="action-item-content">
+                        <div class="action-item-text">
+                            <p><span class="impact">Impact:</span> Lacks context. <span class="fix">Fix:</span> Request updates.<span class="time">~30 min</span></p>
+                        </div>
+                        <div class="action-item-link">
+                            <a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20description%20is%20EMPTY%20AND%20resolution%20%3D%20Unresolved%20AND%20issuetype%20!%3D%20Epic%20ORDER%20BY%20created%20DESC" target="_blank">🔗 View 7 Issues</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-item-number action-gradient-5">
+                        5. No Assignee (3) 🚨
+                    </div>
+                    <div class="action-item-content">
+                        <div class="action-item-text">
+                            <p><span class="impact">Impact:</span> No owner. <span class="fix">Fix:</span> Assign now.<span class="time">~3 min</span></p>
+                        </div>
+                        <div class="action-item-link">
+                            <a href="https://issues.redhat.com/issues/?jql=project%20IN%20(RHAISTRAT%2C%20RHOAISTRAT%2C%20RHOAIENG)%20AND%20component%20IN%20(%22AI%20Core%20Dashboard%22%2C%20%22Notebooks%20Server%22%2C%20%22Notebooks%20Extensions%22)%20AND%20labels%20IN%20(%22dashboard-green-scrum%22%2C%20%22dashboard-zaffre-scrum%22%2C%20%22dashboard-razzmatazz-scrum%22%2C%20%22dashboard-monarch-scrum%22%2C%20%22dashboard-crimson-scrum%22%2C%20%22dashboard-tangerine-scrum%22%2C%20%22ide_scrum%3Aindigo%22%2C%20%22ide_scrum%3Ateal%22)%20AND%20status%20IN%20(%22In%20Progress%22%2C%20%22Code%20Review%22%2C%20%22Review%22%2C%20%22In%20Review%22)%20AND%20assignee%20is%20EMPTY%20ORDER%20BY%20updated%20ASC" target="_blank">🔗 View 3 Issues</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✅ Recommended Actions</h2>
+            
+            <h3 style="color: #667eea; margin-top: 20px;">Immediate (This Week)</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>URGENT:</strong> Assign 3 active issues (RHOAIENG-38641, RHOAIENG-38057, RHOAIENG-24158) - 3 min</li>
+                <li><strong>Git PR Links:</strong> Add PR links to 61 active work issues - 1 hour</li>
+                <li><strong>Priority bulk:</strong> Set priorities for 106 issues - 1 hour</li>
+                <li><strong>Fix versions:</strong> Assign to 43 in-progress issues - 30 min</li>
+                <li><strong>Descriptions:</strong> Update 7 empty descriptions - 30 min</li>
+            </ul>
+
+            <h3 style="color: #667eea; margin-top: 20px;">Short Term (Next 2 Weeks)</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Verify Git PR links</strong> - Review 61 issues for proper linkage</li>
+                <li><strong>Complete fix versions</strong> - Follow up on 43 in-progress issues</li>
+                <li><strong>Finish priorities</strong> - Review 106 issues with team leads</li>
+            </ul>
+
+            <h3 style="color: #667eea; margin-top: 20px;">Long Term (Process Improvements)</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Require Git PR link</strong> before Code Review status</li>
+                <li><strong>Require Fix Version</strong> on in-progress issues</li>
+                <li><strong>Add JIRA automation</strong> for PR and fix version reminders</li>
+                <li><strong>Weekly hygiene checks</strong> as sprint rituals</li>
+            </ul>
+            
+            <p style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 6px; font-size: 14px; color: #856404;">
+                <strong>Est. Time (Immediate):</strong> ~3 hours (mostly bulk operations)
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>🌟 Best Practices from Top Teams</h2>
+            
+            <div class="best-practices">
+                <h4>dashboard-zaffre-scrum</h4>
+                <p><strong>What they're doing right:</strong></p>
+                <ul>
+                    <li>Excellent Git PR linking discipline</li>
+                    <li>95% priority coverage</li>
+                    <li>Fix versions assigned to active work</li>
+                    <li>Clear ownership - assignees on all work</li>
+                </ul>
+            </div>
+
+            <div class="best-practices">
+                <h4>dashboard-tangerine-scrum</h4>
+                <p><strong>What they're doing right:</strong></p>
+                <ul>
+                    <li>Strong Git PR practices</li>
+                    <li>Good priority discipline</li>
+                    <li>Fix versions tracked consistently</li>
+                </ul>
+            </div>
+
+            <div class="best-practices">
+                <h4>dashboard-razzmatazz-scrum</h4>
+                <p><strong>What they're doing right:</strong></p>
+                <ul>
+                    <li>Balanced hygiene across all metrics</li>
+                    <li>Consistent PR linking for active work</li>
+                    <li>Good fix version tracking</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
