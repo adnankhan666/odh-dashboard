@@ -32,3 +32,9 @@ dist
 
 # Contract test results 
 contract-test-results
+
+# Ignore generated hygiene reports (combined and per-label)
+COMBINED-hygiene-report-*.md
+*-hygiene-report-*.md
+hygiene-report-*.html
+*-hygiene-summary.md
